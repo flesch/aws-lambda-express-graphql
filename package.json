@@ -1,0 +1,50 @@
+{
+  "name": "aws-lambda-express-graphql",
+  "description": "Running \"express-graphql\" on AWS Lamdba.",
+  "version": "1.0.0",
+  "author": "John Flesch <john@fles.ch> (https://fles.ch/)",
+  "bugs": {
+    "url": "https://git.lto.vzw.com/flesch/aws-lambda-express-graphql/issues"
+  },
+  "dependencies": {
+    "aws-serverless-express": "^1.2.0",
+    "body-parser": "^1.16.0",
+    "express": "^4.14.0",
+    "express-graphql": "^0.6.3",
+    "graphql": "^0.9.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-env": "^1.1.8",
+    "claudia": "^2.6.0",
+    "json-loader": "^0.5.4",
+    "nodemon": "^1.11.0",
+    "webpack": "^2.2.0",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "homepage": "https://git.lto.vzw.com/flesch/aws-lambda-express-graphql",
+  "keywords": [
+    "aws",
+    "express",
+    "graphql",
+    "lambda"
+  ],
+  "license": "MIT",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://git.lto.vzw.com/flesch/aws-lambda-express-graphql.git"
+  },
+  "scripts": {
+    "claudia": "claudia --profile ${AWS_PROFILE:-default}",
+    "create": "npm run transpile && claudia --profile ${AWS_PROFILE:-default} create --handler aws-lambda-bundle.handler --deploy-proxy-api --region us-east-1 --no-optional-dependencies --version graphql",
+    "deploy": "[ -f claudia.json ] && npm run update || npm run create",
+    "destroy": "claudia --profile ${AWS_PROFILE:-default} destroy",
+    "logs": "aws --profile ${AWS_PROFILE:-default} --region us-east-1 logs filter-log-events --log-group-name /aws/lambda/${npm_package_name}",
+    "start": "nodemon -x 'NODE_ENV=development npm run transpile && node' --ignore 'aws-lambda-bundle.js' aws-lambda-bundle.js",
+    "transpile": "webpack",
+    "update": "npm run transpile && claudia --profile ${AWS_PROFILE:-default} update --no-optional-dependencies --version graphql",
+    "webpack": "webpack"
+  }
+}
